@@ -79,6 +79,12 @@ class TaskUpdate(LoginRequiredMixin, UpdateView):
     fields = ['title', 'description', 'complete']
     success_url = reverse_lazy('tasks')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user != context['task'].user:
+            context['not_allowed'] = True
+        return context
+
 
 class TaskDelete(LoginRequiredMixin, DeleteView):
     model = Task
